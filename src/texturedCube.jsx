@@ -5,8 +5,8 @@ function TexturedCube() {
   const refContainer = useRef(null);
 
   useEffect(() => {
-
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x111122);
 
     const camera = new THREE.PerspectiveCamera(
       75,
@@ -14,90 +14,112 @@ function TexturedCube() {
       0.1,
       1000
     );
+    camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-
     refContainer.current.appendChild(renderer.domElement);
 
+    // -------- LIGHTING --------
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    const dirLight1 = new THREE.DirectionalLight(0xffffff, 1);
+    dirLight1.position.set(2, 3, 4);
+    scene.add(dirLight1);
+
+    const dirLight2 = new THREE.DirectionalLight(0xffffff, 0.6);
+    dirLight2.position.set(-3, 1, -2);
+    scene.add(dirLight2);
+
+    const dirLight3 = new THREE.DirectionalLight(0xffffff, 0.4);
+    dirLight3.position.set(0, 2, -5);
+    scene.add(dirLight3);
+
+    // -------- TEXTURE LOADER --------
     const loader = new THREE.TextureLoader();
 
-    // image textures
-    const texturePaths = [
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo187BbScTWHiSErFZXVW50_Tg6wJx4TsPFA&s",
-      "/textures/left.JPG",
-      "/textures/front.jpg",
-      "/textures/back.jpg",
-    ];
-
-    const materials = texturePaths.map((path) => {
-      const texture = loader.load(path);
-      // texture.colorSpace = THREE.SRGBColorSpace;
-
-      return new THREE.MeshBasicMaterial({
+    function loadTextureWithFallback(path, fallbackColor) {
+      const texture = loader.load(
+        path,
+        undefined,
+        undefined,
+        () => console.warn(`Image not found: ${path}, using fallback color`)
+      );
+      return new THREE.MeshStandardMaterial({
         map: texture,
+        color: fallbackColor,
       });
-    });
+    }
 
-    // -------- TEXTURE FOR TEXT --------
+    // Image textures (adjust paths if your files are named differently)
+    const rightMat = loadTextureWithFallback("/textures/right.JPG", 0xff0000);
+    const leftMat  = loadTextureWithFallback("/textures/left.JPG", 0x00ff00);
+    const frontMat = loadTextureWithFallback("/textures/front.jpg", 0x0000ff);
+    const backMat  = loadTextureWithFallback("/textures/back.jpg", 0xffff00);
 
-    function createTextTexture(text) {
+    // -------- TEXT TEXTURES (Your Name & Seat Number) --------
+    function createTextTexture(text, bgColor, textColor) {
       const canvas = document.createElement("canvas");
       canvas.width = 512;
       canvas.height = 512;
+      const ctx = canvas.getContext("2d");
 
-      const context = canvas.getContext("2d");
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      context.fillStyle = "red";
-      context.fillRect(0, 0, canvas.width, canvas.height);
-
-      context.fillStyle = "black";
-      context.font = "bold 40px Arial";
-      context.textAlign = "center";
-      context.textBaseline = "middle";
-      
-        // draw text slightly lower to avoid clipping
-      context.fillText(text, canvas.width / 2, canvas.height / 2 + 20);
+      ctx.fillStyle = textColor;
+      ctx.font = "bold 30px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(text, canvas.width / 2, canvas.height / 2);
 
       const texture = new THREE.CanvasTexture(canvas);
       return new THREE.MeshBasicMaterial({ map: texture });
     }
 
-    const text1 = createTextTexture("Hasan Khan");
-    const text2 = createTextTexture("B23110006099");
+    const topMat = createTextTexture("Muhammad Hasan Khan", "#ff6b6b", "#ffffff");
+    const bottomMat = createTextTexture("B23110006099", "#4ecdc4", "#ffffff");
 
-    // cube needs 6 materials
+    // -------- CUBE (6 materials) --------
     const cubeMaterials = [
-      materials[0], // right
-      materials[1], // left
-      text1,        // top
-      text2,        // bottom
-      materials[2], // front
-      materials[3], // back
-      
+      rightMat,  // right
+      leftMat,   // left
+      topMat,    // top
+      bottomMat, // bottom
+      frontMat,  // front
+      backMat    // back
     ];
 
     const geometry = new THREE.BoxGeometry(2, 2, 2);
     const cube = new THREE.Mesh(geometry, cubeMaterials);
-
     scene.add(cube);
 
-    camera.position.z = 5;
-
+    // -------- ANIMATION --------
     function animate() {
       requestAnimationFrame(animate);
-
       cube.rotation.x += 0.01;
-      cube.rotation.y += 0.01;
-
+      cube.rotation.y += 0.015;
       renderer.render(scene, camera);
     }
-
     animate();
 
+    // -------- RESIZE HANDLER --------
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      refContainer.current?.removeChild(renderer.domElement);
+    };
   }, []);
 
-  return <div ref={refContainer}></div>;
+  return <div ref={refContainer} style={{ width: "100%", height: "100vh" }} />;
 }
 
 export default TexturedCube;
