@@ -52,7 +52,7 @@ function TexturedCube() {
       context.fillRect(0, 0, canvas.width, canvas.height);
 
       context.fillStyle = "black";
-      context.font = "bold 60px Arial";
+      context.font = "bold 40px Arial";
       context.textAlign = "center";
       context.textBaseline = "middle";
       
