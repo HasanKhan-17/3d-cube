@@ -24,7 +24,7 @@ function TexturedCube() {
 
     // image textures
     const texturePaths = [
-      "/textures/right.JPG",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTo187BbScTWHiSErFZXVW50_Tg6wJx4TsPFA&s",
       "/textures/left.JPG",
       "/textures/front.jpg",
       "/textures/back.jpg",
