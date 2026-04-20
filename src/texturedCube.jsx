@@ -63,7 +63,7 @@ function TexturedCube() {
       return new THREE.MeshBasicMaterial({ map: texture });
     }
 
-    const text1 = createTextTexture("Muhammad Hasan Khan");
+    const text1 = createTextTexture("Hasan Khan");
     const text2 = createTextTexture("B23110006099");
 
     // cube needs 6 materials
