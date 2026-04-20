@@ -53,10 +53,10 @@ function TexturedCube() {
     }
 
     // Image textures (adjust paths if your files are named differently)
-    const rightMat = loadTextureWithFallback("/textures/right.JPG", 0xff0000);
-    const leftMat  = loadTextureWithFallback("/textures/left.JPG", 0x00ff00);
-    const frontMat = loadTextureWithFallback("/textures/front.jpg", 0x0000ff);
-    const backMat  = loadTextureWithFallback("/textures/back.jpg", 0xffff00);
+const rightMat = loadTextureWithFallback("https://onlinebooksoutlet.com/cdn/shop/files/Human-Computer-Interaction-3rd-Edition-by-Alan-Dix-Author-Janet-E.-Finlay-Author-2-more-OnlineBooksOutlet_0ac5016a-cb36-47de-88bb-99dc98704bb3.jpg", 0xff0000);
+const leftMat  = loadTextureWithFallback("https://onlinebooksoutlet.com/cdn/shop/files/Human-Computer-Interaction-3rd-Edition-by-Alan-Dix-Author-Janet-E.-Finlay-Author-2-more-OnlineBooksOutlet_0ac5016a-cb36-47de-88bb-99dc98704bb3.jpg", 0x00ff00);
+const frontMat = loadTextureWithFallback("https://onlinebooksoutlet.com/cdn/shop/files/Human-Computer-Interaction-3rd-Edition-by-Alan-Dix-Author-Janet-E.-Finlay-Author-2-more-OnlineBooksOutlet_0ac5016a-cb36-47de-88bb-99dc98704bb3.jpg", 0x0000ff);
+const backMat  = loadTextureWithFallback("https://onlinebooksoutlet.com/cdn/shop/files/Human-Computer-Interaction-3rd-Edition-by-Alan-Dix-Author-Janet-E.-Finlay-Author-2-more-OnlineBooksOutlet_0ac5016a-cb36-47de-88bb-99dc98704bb3.jpg", 0xffff00);
 
     // -------- TEXT TEXTURES (Your Name & Seat Number) --------
     function createTextTexture(text, bgColor, textColor) {
